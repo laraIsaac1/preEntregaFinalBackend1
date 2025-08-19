@@ -1,0 +1,10 @@
+<div class="card">
+  <div class="badge">{{product.category}}</div>
+  <h2>{{product.title}}</h2>
+  <p>{{product.description}}</p>
+  <p class="price">$ {{product.price}}</p>
+  <div style="margin-top:8px; display:flex; gap:8px;">
+    <button class="btn primary" onclick="addToCart('{{cartId}}', '{{product._id}}', 1)">Agregar al carrito</button>
+    <a class="btn ghost" href="/products">Volver</a>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="toolbar">
+  <form method="GET" action="/products" style="display:flex; gap:8px; align-items:center;">
+    <input type="text" name="query" value="{{query}}" placeholder="categoria: tartas, budines, alfajores" />
+    <select name="sort">
+      <option value="" {{#unless sort}}selected{{/unless}}>Sin orden</option>
+      <option value="asc" {{#if (eq sort "asc")}}selected{{/if}}>Precio asc</option>
+      <option value="desc" {{#if (eq sort "desc")}}selected{{/if}}>Precio desc</option>
+    </select>
+    <input type="number" name="limit" value="{{limit}}" min="1" style="width:90px;"/>
+    <button class="btn ghost" type="submit">Aplicar</button>
+  </form>
+  {{#if cartId}}
+    <a class="btn" href="/carts/{{cartId}}">Ver mi carrito</a>
+  {{/if}}
+</div>
+
+{{#if isAdmin}}
+  <details class="card" open style="margin-bottom:12px;">
+    <summary><strong> Agregar producto (admin)</strong></summary>
+    <form id="admin-create-product-form" style="display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:8px; margin-top:8px;">
+      <label>Titulo<input name="title" required></label>
+      <label>Descripcion<input name="description" required></label>
+      <label>Categoria<input name="category" required placeholder="tartas, brownies, alfajores..."></label>
+      <label>Precio<input name="price" type="number" step="0.01" required></label>
+      <label>Stock<input name="stock" type="number" min="0" required></label>
+      <label>Estado
+        <select name="status">
+          <option value="true" selected>Disponible</option>
+          <option value="false">No disponible</option>
+        </select>
+      </label>
+      <label>Codigo<input name="code" required placeholder="único (ej. LEM-003)"></label>
+      <label>Imagen (URL)
+        <input name="thumbnails" placeholder="https://..., https://...">
+      </label>
+      <div style="grid-column: 1 / -1; display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
+        <button class="btn ghost" type="reset">Limpiar</button>
+        <button class="btn primary" type="submit">Crear</button>
+      </div>
+    </form>
+  </details>
+{{/if}}
+
+
+<div class="grid">
+  {{#each products}}
+    <div class="card">
+      {{#if thumbnails.[0]}}
+        <img src="{{thumbnails.[0]}}" alt="{{title}}" style="width:100%; border-radius:8px; margin-bottom:8px;">
+      {{/if}}
+      <div class="badge">{{category}}</div>
+      <h3>{{title}}</h3>
+      <div>{{description}}</div>
+      <div class="price">$ {{price}}</div>
+      <div style="margin-top:8px; display:flex; gap:8px;">
+        <a class="btn ghost" href="/products/{{_id}}">Ver</a>
+        <button class="btn primary" onclick="addToCart('{{../cartId}}', '{{_id}}', 1)">Agregar al carrito</button>
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+<div class="pagination">
+  {{#if pagination.hasPrevPage}}
+    <a class="btn ghost" href="{{pagination.prevLink}}">« Anterior</a>
+  {{/if}}
+  <span>Página {{pagination.page}} / {{pagination.totalPages}}</span>
+  {{#if pagination.hasNextPage}}
+    <a class="btn ghost" href="{{pagination.nextLink}}">Siguiente »</a>
+  {{/if}}
+</div>
